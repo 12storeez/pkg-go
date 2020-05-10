@@ -14,10 +14,10 @@ const (
 )
 
 type Connection struct {
-	Conn    *amqp.Connection
-	channel *amqp.Channel
-	ctx     context.Context
-	url     string
+	Connection *amqp.Connection
+	Channel    *amqp.Channel
+	ctx        context.Context
+	url        string
 }
 
 type Publisher func(body []byte) error
@@ -54,8 +54,8 @@ func (c *Connection) connect() error {
 			return err
 		}
 
-		c.Conn = conn
-		c.channel = ch
+		c.Connection = conn
+		c.Channel = ch
 		log.Info("Connected to rabbit")
 		return nil
 	})
@@ -66,7 +66,7 @@ func (c *Connection) connect() error {
 }
 
 func (c *Connection) reconnect() {
-	errs := c.Conn.NotifyClose(make(chan *amqp.Error))
+	errs := c.Connection.NotifyClose(make(chan *amqp.Error))
 	for {
 		select {
 		case <-errs:
@@ -79,7 +79,7 @@ func (c *Connection) reconnect() {
 }
 
 func (c *Connection) Consumer(exchange string, key string) (<-chan amqp.Delivery, error) {
-	q, err := c.channel.QueueDeclare(
+	q, err := c.Channel.QueueDeclare(
 		"",
 		true,
 		false,
@@ -91,7 +91,7 @@ func (c *Connection) Consumer(exchange string, key string) (<-chan amqp.Delivery
 		return nil, err
 	}
 
-	if err := c.channel.QueueBind(
+	if err := c.Channel.QueueBind(
 		q.Name,
 		key,
 		exchange,
@@ -100,7 +100,7 @@ func (c *Connection) Consumer(exchange string, key string) (<-chan amqp.Delivery
 		return nil, err
 	}
 
-	msgs, err := c.channel.Consume(
+	msgs, err := c.Channel.Consume(
 		q.Name,
 		"",
 		true,
@@ -118,7 +118,7 @@ func (c *Connection) Consumer(exchange string, key string) (<-chan amqp.Delivery
 
 func (c Connection) NewPublisher(exchange string, key string) (Publisher, error) {
 	return func(body []byte) error {
-		err := c.channel.Publish(
+		err := c.Channel.Publish(
 			exchange,
 			key,
 			false,
