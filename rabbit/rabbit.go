@@ -14,7 +14,7 @@ const (
 )
 
 type Connection struct {
-	conn    *amqp.Connection
+	Conn    *amqp.Connection
 	channel *amqp.Channel
 	ctx     context.Context
 	url     string
@@ -54,7 +54,7 @@ func (c *Connection) connect() error {
 			return err
 		}
 
-		c.conn = conn
+		c.Conn = conn
 		c.channel = ch
 		log.Info("Connected to rabbit")
 		return nil
@@ -66,7 +66,7 @@ func (c *Connection) connect() error {
 }
 
 func (c *Connection) reconnect() {
-	errs := c.conn.NotifyClose(make(chan *amqp.Error))
+	errs := c.Conn.NotifyClose(make(chan *amqp.Error))
 	for {
 		select {
 		case <-errs:
