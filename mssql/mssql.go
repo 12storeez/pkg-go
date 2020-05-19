@@ -1,4 +1,4 @@
-package ms_sql_server
+package mssql
 
 import (
 	"fmt"
@@ -6,11 +6,11 @@ import (
 	"github.com/jmoiron/sqlx"
 )
 
-type SqlServer struct {
+type MsSql struct {
 	Database *sqlx.DB
 }
 
-func NewMsSQLServerDB(addr, database, user, password, port string) (*SqlServer, error) {
+func NewMSSQL(addr, database, user, password, port string) (*MsSql, error) {
 	connString := fmt.Sprintf("server=%s;user id=%s;password=%s;port=%s;database=%s;",
 		addr, user, password, port, database)
 
@@ -19,5 +19,5 @@ func NewMsSQLServerDB(addr, database, user, password, port string) (*SqlServer, 
 		return nil, fmt.Errorf("error creating connection pool: %v", err)
 	}
 
-	return &SqlServer{Database: db}, nil
+	return &MsSql{Database: db}, nil
 }
