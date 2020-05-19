@@ -3,6 +3,7 @@ module github.com/12storeez/pkg-go
 go 1.14
 
 require (
+	github.com/denisenkom/go-mssqldb v0.0.0-20200428022330-06a60b6afbbc
 	github.com/go-pg/pg v8.0.6+incompatible
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/jinzhu/inflection v1.0.0 // indirect
