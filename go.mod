@@ -11,6 +11,7 @@ require (
 	github.com/onsi/ginkgo v1.12.0 // indirect
 	github.com/onsi/gomega v1.10.0 // indirect
 	github.com/pkg/errors v0.9.1
+	github.com/robfig/cron v1.2.0
 	github.com/streadway/amqp v0.0.0-20200108173154-1c71cc93ed71
 	github.com/zhs/loggr v0.0.3
 	go.mongodb.org/mongo-driver v1.3.3
