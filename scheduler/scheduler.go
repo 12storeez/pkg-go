@@ -16,8 +16,9 @@ type Worker interface {
 func New(workers ...Worker) *Scheduler {
 	s := &Scheduler{scheduler: cron.New()}
 	for _, worker := range workers {
-		_ = s.scheduler.AddFunc(worker.Schedule(), func() {
-			worker.Run()
+		temp := worker
+		_ = s.scheduler.AddFunc(temp.Schedule(), func() {
+			temp.Run()
 		})
 	}
 	return s
