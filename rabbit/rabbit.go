@@ -30,8 +30,7 @@ func NewConnection(ctx context.Context, url string) (*Connection, error) {
 		ctx: ctx,
 		url: url,
 	}
-	err := conn.connect()
-	if err != nil {
+	if err := conn.connect(); err != nil {
 		return nil, errors.New("can't connect to Rabbit after timeout")
 	}
 	go conn.reconnect()
