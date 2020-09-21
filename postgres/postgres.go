@@ -2,7 +2,8 @@ package postgres
 
 import (
 	"context"
-	"github.com/go-pg/pg"
+	"fmt"
+	"github.com/go-pg/pg/v10"
 	"github.com/zhs/loggr"
 	"time"
 )
@@ -19,8 +20,8 @@ func NewPostgres(addr string, database string, user string, password string) *pg
 		db := pg.Connect(opts)
 		_, err := db.Exec("SELECT 1")
 		if err != nil {
-			log.Warnf("can't connect to postgres: %v", err)
-			log.Info("try again")
+			fmt.Printf("pg: connection to %s failed\n", addr)
+			fmt.Println("try retry...")
 			time.Sleep(1 * time.Second)
 			continue
 		}
