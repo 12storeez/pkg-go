@@ -5,27 +5,23 @@ import (
 	"fmt"
 	"github.com/go-pg/pg/v10"
 	"github.com/zhs/loggr"
-	"time"
 )
 
-func NewPostgres(addr string, database string, user string, password string) *pg.DB {
+func NewPostgres(addr, port, database, user, password string) (*pg.DB, error) {
 	log := loggr.WithContext(context.Background())
+	connectionAddr := fmt.Sprintf("%s:%s", addr, port)
+	log.Infof("connect to %s", connectionAddr)
 	opts := &pg.Options{
-		Addr:     addr,
+		Addr:     connectionAddr,
 		Database: database,
 		User:     user,
 		Password: password,
 	}
-	for {
-		db := pg.Connect(opts)
-		_, err := db.Exec("SELECT 1")
-		if err != nil {
-			fmt.Printf("pg: connection to %s failed\n", addr)
-			fmt.Println("try retry...")
-			time.Sleep(1 * time.Second)
-			continue
-		}
-		log.Info("connected to postgres")
-		return db
+	db := pg.Connect(opts)
+	_, err := db.Exec("SELECT 1")
+	if err != nil {
+		log.Errorf("pg: connection to %s failed\n: %v", connectionAddr, err)
+		return nil, err
 	}
+	return db, nil
 }
